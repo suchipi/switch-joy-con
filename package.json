@@ -11,7 +11,8 @@
     "controller",
     "hid"
   ],
-  "version": "1.0.1",
+  "repository": "suchipi/switch-joy-con",
+  "version": "1.0.2",
   "main": "index.js",
   "license": "MIT",
   "author": "Lily Scott <me@suchipi.com>",
