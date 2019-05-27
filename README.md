@@ -2,6 +2,11 @@
 
 Use Nintendo Switch Joy-Cons as input devices (Bluetooth).
 
+## Features
+
+- Run callback(s) when buttons are pressed/released/changed
+- Toggle player LEDs
+
 ## Installation
 
 ```
@@ -252,6 +257,26 @@ interface JoyCon extends EventEmitter {
   // It won't be disconnected from Bluetooth, but the handle
   // will be released so it can be used by another application.
   close();
+
+  // LED values that can be provided to the `setPlayerLEDs` method.
+  LED_VALUES: {
+    // Indicates that the LED in this slot should be lit up solid.
+    ONE: number;
+    TWO: number;
+    THREE: number;
+    FOUR: number;
+
+    // Indicates that the LED in this slot should be flashing on and off.
+    ONE_FLASH: number;
+    TWO_FLASH: number;
+    THREE_FLASH: number;
+    FOUR_FLASH: number;
+  };
+
+  // Set which player LEDs are lit. Use value(s) from the `LED_VALUES` property.
+  // To turn on more than one LED, add them together; eg:
+  // setPlayerLEDs(LED_VALUES.ONE + LED_VALUES.TWO)
+  setPlayerLEDs(value: number);
 }
 ```
 
