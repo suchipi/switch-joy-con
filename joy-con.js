@@ -49,10 +49,10 @@ class JoyCon extends EventEmitter {
     this._send(bytes);
   }
 
-  emit(...args) {
-    console.log(...args);
-    super.emit(...args);
-  }
+  // emit(...args) {
+  //   console.log(...args);
+  //   super.emit(...args);
+  // }
 
   _buttonsFromInputReport3F(bytes) {
     // Implement in subclass
