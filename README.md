@@ -1,11 +1,17 @@
-# `joy-con`
+# `switch-joy-con`
 
 Use Nintendo Switch Joy-Cons as input devices (Bluetooth).
+
+## Installation
+
+```
+npm install --save switch-joy-con
+```
 
 ## Usage
 
 ```js
-const { listConnectedJoyCons } = require("joy-con");
+const { listConnectedJoyCons } = require("switch-joy-con");
 
 // First, list all the Joy-Cons connected to the computer.
 const devices = listConnectedJoyCons();
@@ -152,7 +158,7 @@ console.log(right.side); // "right"
 
 ## API Documentation
 
-The `"joy-con"` module has one named export, `listConnectedJoyCons`.
+The `"switch-joy-con"` module has one named export, `listConnectedJoyCons`.
 
 ### `listConnectedJoyCons() => Array<JoyConDescription>`
 
