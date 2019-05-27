@@ -1,0 +1,21 @@
+{
+  "name": "joy-con",
+  "description": "Use Nintendo Switch Joy-Cons as input devices (Bluetooth)",
+  "keywords": [
+    "nintendo",
+    "switch",
+    "joycon",
+    "joy-con",
+    "gamepad",
+    "joypad",
+    "controller",
+    "hid"
+  ],
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Lily Scott <me@suchipi.com>",
+  "dependencies": {
+    "node-hid": "^0.7.8"
+  }
+}
