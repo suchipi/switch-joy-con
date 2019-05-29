@@ -5,14 +5,16 @@ const JoyConRight = require("./joy-con-right");
 function listConnectedJoyCons() {
   const devices = HID.devices();
   return devices
-    .filter(device => device.product.match(/Joy-Con/))
+    .filter(device => device.vendorId === 1406)
     .map(device => {
       return Object.assign({}, device, {
         open() {
-          if (device.product.match(/\(L\)/)) {
+          if (device.productId === 8198) {
             return new JoyConLeft(device.path);
-          } else if (device.product.match(/\(R\)/)) {
+          } else if (device.productId === 8199) {
             return new JoyConRight(device.path);
+          } else {
+            throw new Error("Unknown Joy-Con model");
           }
         }
       });
