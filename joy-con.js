@@ -9,7 +9,7 @@ const LED_VALUES = {
   ONE_FLASH: 16,
   TWO_FLASH: 32,
   THREE_FLASH: 64,
-  FOUR_FLASH: 128
+  FOUR_FLASH: 128,
 };
 
 class JoyCon extends EventEmitter {
@@ -20,9 +20,11 @@ class JoyCon extends EventEmitter {
     this._globalPacketNumber = 0;
     this._device = new HID.HID(path);
 
-    this._device.on("data", bytes => {
+    this._device.on("data", (bytes) => {
       this._handleData(bytes);
     });
+
+    this.setInputReportMode(0x3f);
   }
 
   close() {
@@ -44,6 +46,16 @@ class JoyCon extends EventEmitter {
     const bytes = new Array(0x40).fill(0);
     bytes[0] = 0x01;
     bytes[10] = 0x30;
+    bytes[11] = value;
+
+    this._send(bytes);
+  }
+
+  // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/bluetooth_hid_subcommands_notes.md#subcommand-0x03-set-input-report-mode
+  setInputReportMode(value) {
+    const bytes = new Array(0x40).fill(0);
+    bytes[0] = 0x01;
+    bytes[10] = 0x03;
     bytes[11] = value;
 
     this._send(bytes);
