@@ -1,6 +1,7 @@
 const HID = require("node-hid");
 const JoyConLeft = require("./joy-con-left");
 const JoyConRight = require("./joy-con-right");
+const ProCon = require("./pro-con");
 
 function listConnectedJoyCons() {
   const devices = HID.devices();
@@ -13,6 +14,8 @@ function listConnectedJoyCons() {
             return new JoyConLeft(device.path);
           } else if (device.productId === 8199) {
             return new JoyConRight(device.path);
+          } else if (device.productId === 8201) {
+            return new ProCon(device.path);
           } else {
             throw new Error("Unknown Joy-Con model");
           }
