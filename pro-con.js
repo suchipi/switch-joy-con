@@ -25,8 +25,8 @@ class ProCon extends JoyCon {
       zr: false,
       analogStickLPress: false,
       analogStickRPress: false,
-      analogStickL: 130, // TODO: Need resarch.
-      analogStickR: 130, // TODO: Need resarch.
+      analogStickL: 130,
+      analogStickR: 130
     };
   }
 
@@ -55,8 +55,8 @@ class ProCon extends JoyCon {
       analogStickLPress: Boolean(bytes[2] & 0x04),
       analogStickRPress: Boolean(bytes[2] & 0x08),
 
-      analogStickL: bytes[5], // TODO: Need resarch.
-      analogStickR: bytes[9]  // TODO: Need resarch.
+      analogStickL: [bytes[5], bytes[7]],
+      analogStickR: [bytes[9], bytes[11]]
     };
   }
 }
