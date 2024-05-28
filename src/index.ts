@@ -1,8 +1,12 @@
-const HID = require("node-hid");
-const JoyConLeft = require("./joy-con-left");
-const JoyConRight = require("./joy-con-right");
+import HID from "node-hid";
+import { JoyConLeft, LeftButtons, LeftDirections } from "./joy-con-left";
+import { JoyConRight, RightButtons, RightDirections } from "./joy-con-right";
 
-const knownProducts = {
+const knownProducts: {
+  [vendorAndProductId: string]:
+    | undefined
+    | { side: "left" | "right" | undefined };
+} = {
   // Official Nintendo Switch Joy-Con (L)
   "1406:8198": {
     side: "left",
@@ -18,7 +22,10 @@ const knownProducts = {
   },
 };
 
-function openNodeHidDeviceAsJoyCon(device, optionalSideOverride) {
+function openNodeHidDeviceAsJoyCon(
+  device: HID.Device,
+  optionalSideOverride?: "left" | "right",
+) {
   const knownProduct = knownProducts[`${device.vendorId}:${device.productId}`];
 
   const side =
@@ -51,16 +58,23 @@ function listConnectedJoyCons() {
     .filter((device) => device.vendorId === 1406)
     .map((device) => {
       return Object.assign({}, device, {
-        open(optionalSideOverride) {
+        open(optionalSideOverride: "left" | "right") {
           return openNodeHidDeviceAsJoyCon(device, optionalSideOverride);
         },
       });
     });
 }
 
-module.exports = {
+type JoyCon = JoyConLeft | JoyConRight;
+
+export {
   listConnectedJoyCons,
   openNodeHidDeviceAsJoyCon,
   JoyConLeft,
   JoyConRight,
+  LeftDirections,
+  RightDirections,
+  type JoyCon,
+  type LeftButtons,
+  type RightButtons,
 };

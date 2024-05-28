@@ -1,6 +1,6 @@
-const JoyCon = require("./joy-con");
+import { JoyCon } from "./joy-con";
 
-const Directions = {
+export const RightDirections = {
   LEFT: 0x00,
   UP_LEFT: 0x01,
   UP: 0x02,
@@ -12,12 +12,27 @@ const Directions = {
   NEUTRAL: 0x08,
 };
 
-class JoyConRight extends JoyCon {
-  constructor(path = null) {
-    super(path);
+export type RightButtons = {
+  a: boolean;
+  x: boolean;
+  b: boolean;
+  y: boolean;
+  plus: boolean;
+  home: boolean;
+  sl: boolean;
+  sr: boolean;
+  r: boolean;
+  zr: boolean;
+  analogStickPress: boolean;
+  analogStick: number;
+};
 
-    this.side = "right";
-    this.Directions = Directions;
+export class JoyConRight extends JoyCon<RightButtons> {
+  side: "right" = "right";
+  Directions = RightDirections;
+
+  constructor(path: string | undefined | null = null) {
+    super(path);
 
     this.buttons = {
       a: false,
@@ -31,11 +46,11 @@ class JoyConRight extends JoyCon {
       r: false,
       zr: false,
       analogStickPress: false,
-      analogStick: Directions.NEUTRAL,
+      analogStick: RightDirections.NEUTRAL,
     };
   }
 
-  _buttonsFromInputReport3F(bytes) {
+  _buttonsFromInputReport3F(bytes: Array<number>) {
     return {
       a: Boolean(bytes[1] & 0x01),
       x: Boolean(bytes[1] & 0x02),
@@ -56,5 +71,3 @@ class JoyConRight extends JoyCon {
     };
   }
 }
-
-module.exports = JoyConRight;

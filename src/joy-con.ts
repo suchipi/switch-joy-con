@@ -1,5 +1,5 @@
-const EventEmitter = require("events");
-const HID = require("node-hid");
+import EventEmitter from "events";
+import HID from "node-hid";
 
 const LED_VALUES = {
   ONE: 1,
@@ -12,18 +12,25 @@ const LED_VALUES = {
   FOUR_FLASH: 128,
 };
 
-class JoyCon extends EventEmitter {
-  constructor(path) {
+export class JoyCon<Buttons extends {}> extends EventEmitter {
+  LED_VALUES = LED_VALUES;
+
+  _globalPacketNumber = 0;
+  _device: HID.HID;
+
+  // Subclass is expected to set this property in its constructor
+  buttons!: Buttons;
+
+  constructor(path: string | undefined | null) {
     super();
 
-    this.LED_VALUES = LED_VALUES;
-    this._globalPacketNumber = 0;
-    this._device = new HID.HID(path);
+    this._device = new HID.HID(path!);
 
     this._device.on("data", (bytes) => {
       this._handleData(bytes);
     });
 
+    // Simple mode. See https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/bluetooth_hid_subcommands_notes.md#subcommand-0x03-set-input-report-mode
     this.setInputReportMode(0x3f);
   }
 
@@ -31,7 +38,7 @@ class JoyCon extends EventEmitter {
     this._device.close();
   }
 
-  _send(data) {
+  _send(data: Array<number>) {
     // See https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/bluetooth_hid_notes.md
 
     this._globalPacketNumber = (this._globalPacketNumber + 0x1) % 0x10;
@@ -42,7 +49,7 @@ class JoyCon extends EventEmitter {
     this._device.write(bytes);
   }
 
-  setPlayerLEDs(value) {
+  setPlayerLEDs(value: number) {
     const bytes = new Array(0x40).fill(0);
     bytes[0] = 0x01;
     bytes[10] = 0x30;
@@ -52,7 +59,7 @@ class JoyCon extends EventEmitter {
   }
 
   // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/bluetooth_hid_subcommands_notes.md#subcommand-0x03-set-input-report-mode
-  setInputReportMode(value) {
+  setInputReportMode(value: number) {
     const bytes = new Array(0x40).fill(0);
     bytes[0] = 0x01;
     bytes[10] = 0x03;
@@ -66,31 +73,35 @@ class JoyCon extends EventEmitter {
   //   super.emit(...args);
   // }
 
-  _buttonsFromInputReport3F(bytes) {
+  _buttonsFromInputReport3F(_bytes: Array<number>): Buttons {
     // Implement in subclass
+    throw new Error(
+      "_buttonsFromInputReport3F not implemented in subclass " +
+        this.constructor.name,
+    );
   }
 
-  _handleData(bytes) {
+  _handleData(bytes: Array<number>) {
     if (bytes[0] !== 0x3f) return;
 
     const nextButtons = this._buttonsFromInputReport3F(bytes);
 
-    Object.entries(nextButtons).forEach(([name, nextValue]) => {
+    for (const pair of Object.entries(nextButtons)) {
+      const [name, nextValue] = pair as [keyof Buttons, Buttons[keyof Buttons]];
+
       const currentValue = this.buttons[name];
       if (currentValue === false && nextValue === true) {
-        this.emit(`down:${name}`);
+        this.emit(`down:${String(name)}`);
       } else if (currentValue === true && nextValue === false) {
-        this.emit(`up:${name}`);
+        this.emit(`up:${String(name)}`);
       }
 
       if (currentValue !== nextValue) {
-        this.emit(`change:${name}`, nextValue);
+        this.emit(`change:${String(name)}`, nextValue);
       }
-    });
+    }
 
     this.buttons = nextButtons;
     this.emit("change");
   }
 }
-
-module.exports = JoyCon;

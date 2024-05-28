@@ -1,6 +1,6 @@
-const JoyCon = require("./joy-con");
+import { JoyCon } from "./joy-con";
 
-const Directions = {
+export const LeftDirections = {
   RIGHT: 0x00,
   DOWN_RIGHT: 0x01,
   DOWN: 0x02,
@@ -12,12 +12,27 @@ const Directions = {
   NEUTRAL: 0x08,
 };
 
-class JoyConLeft extends JoyCon {
-  constructor(path = null) {
-    super(path);
+export type LeftButtons = {
+  dpadUp: boolean;
+  dpadDown: boolean;
+  dpadLeft: boolean;
+  dpadRight: boolean;
+  minus: boolean;
+  screenshot: boolean;
+  sl: boolean;
+  sr: boolean;
+  l: boolean;
+  zl: boolean;
+  analogStickPress: boolean;
+  analogStick: number;
+};
 
-    this.side = "left";
-    this.Directions = Directions;
+export class JoyConLeft extends JoyCon<LeftButtons> {
+  side: "left" = "left";
+  Directions = LeftDirections;
+
+  constructor(path: string | undefined | null = null) {
+    super(path);
 
     this.buttons = {
       dpadUp: false,
@@ -31,11 +46,11 @@ class JoyConLeft extends JoyCon {
       l: false,
       zl: false,
       analogStickPress: false,
-      analogStick: Directions.NEUTRAL,
+      analogStick: LeftDirections.NEUTRAL,
     };
   }
 
-  _buttonsFromInputReport3F(bytes) {
+  _buttonsFromInputReport3F(bytes: Array<number>) {
     return {
       dpadLeft: Boolean(bytes[1] & 0x01),
       dpadDown: Boolean(bytes[1] & 0x02),
@@ -56,5 +71,3 @@ class JoyConLeft extends JoyCon {
     };
   }
 }
-
-module.exports = JoyConLeft;
