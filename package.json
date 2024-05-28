@@ -23,9 +23,11 @@
     "build": "tsc"
   },
   "dependencies": {
+    "debug": "^4.3.4",
     "node-hid": "^3.0.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.12",
     "@types/node": "^20.12.12",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"

@@ -1,5 +1,9 @@
 import EventEmitter from "events";
 import HID from "node-hid";
+import makeDebug from "debug";
+
+const debug = makeDebug("switch-joy-con:joy-con");
+const ioDebug = makeDebug("switch-joy-con:io");
 
 const LED_VALUES = {
   ONE: 1,
@@ -11,6 +15,10 @@ const LED_VALUES = {
   THREE_FLASH: 64,
   FOUR_FLASH: 128,
 };
+
+function numArrayToHexString(bytes: Array<number>): string {
+  return "0x" + bytes.map((byte) => byte.toString(16)).join("");
+}
 
 export class JoyCon<Buttons extends {}> extends EventEmitter {
   LED_VALUES = LED_VALUES;
@@ -35,6 +43,12 @@ export class JoyCon<Buttons extends {}> extends EventEmitter {
   }
 
   close() {
+    if (debug.enabled) {
+      debug(
+        "Closing device: %s",
+        this._device.generateDeviceInfo().product || "unnamed device",
+      );
+    }
     this._device.close();
   }
 
@@ -46,10 +60,16 @@ export class JoyCon<Buttons extends {}> extends EventEmitter {
     const bytes = [...data];
     bytes[1] = this._globalPacketNumber;
 
+    if (ioDebug.enabled) {
+      ioDebug(`OUT: ${numArrayToHexString(bytes)}`);
+    }
+
     this._device.write(bytes);
   }
 
   setPlayerLEDs(value: number) {
+    debug("Setting player LEDs value to: %d", value);
+
     const bytes = new Array(0x40).fill(0);
     bytes[0] = 0x01;
     bytes[10] = 0x30;
@@ -60,6 +80,8 @@ export class JoyCon<Buttons extends {}> extends EventEmitter {
 
   // https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering/blob/master/bluetooth_hid_subcommands_notes.md#subcommand-0x03-set-input-report-mode
   setInputReportMode(value: number) {
+    debug("Setting input report mode to: %x", value);
+
     const bytes = new Array(0x40).fill(0);
     bytes[0] = 0x01;
     bytes[10] = 0x03;
@@ -68,10 +90,11 @@ export class JoyCon<Buttons extends {}> extends EventEmitter {
     this._send(bytes);
   }
 
-  // emit(...args) {
-  //   console.log(...args);
-  //   super.emit(...args);
-  // }
+  emit(...args: any) {
+    debug("emitting event", ...args);
+    // @ts-ignore spread of non-tuple
+    return super.emit(...args);
+  }
 
   _buttonsFromInputReport3F(_bytes: Array<number>): Buttons {
     // Implement in subclass
@@ -82,7 +105,13 @@ export class JoyCon<Buttons extends {}> extends EventEmitter {
   }
 
   _handleData(bytes: Array<number>) {
+    if (ioDebug.enabled) {
+      // extra space after 'IN' here is so it aligns with 'OUT'
+      ioDebug(`IN : ${numArrayToHexString(bytes)}`);
+    }
+
     if (bytes[0] !== 0x3f) return;
+    debug("Handling input report 3F");
 
     const nextButtons = this._buttonsFromInputReport3F(bytes);
 
