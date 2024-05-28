@@ -32,4 +32,6 @@ function listConnectedJoyCons() {
 
 module.exports = {
   listConnectedJoyCons,
+  JoyConLeft,
+  JoyConRight,
 };
