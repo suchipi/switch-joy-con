@@ -53,6 +53,9 @@ console.log(devices);
 // Decide which to use, and then call `open` on it.
 const left = devices[0].open();
 
+// NOTE: for third-party Joy-Cons, you may have to pass a side string:
+// const left = devices[0].open("left");
+
 // The `buttons` property always contains up-to-date buttons state:
 console.log(left.buttons);
 // {
