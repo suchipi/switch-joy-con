@@ -11,7 +11,10 @@
     "controller",
     "hid"
   ],
-  "repository": "suchipi/switch-joy-con",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suchipi/switch-joy-con.git"
+  },
   "version": "1.1.3",
   "main": "dist/index.js",
   "license": "MIT",
