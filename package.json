@@ -18,5 +18,9 @@
   "author": "Lily Skye <me@suchipi.com>",
   "dependencies": {
     "node-hid": "^3.0.0"
-  }
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  },
+  "prettier": {}
 }

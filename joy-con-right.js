@@ -9,7 +9,7 @@ const Directions = {
   DOWN_RIGHT: 0x05,
   DOWN: 0x06,
   DOWN_LEFT: 0x07,
-  NEUTRAL: 0x08
+  NEUTRAL: 0x08,
 };
 
 class JoyConRight extends JoyCon {
@@ -31,7 +31,7 @@ class JoyConRight extends JoyCon {
       r: false,
       zr: false,
       analogStickPress: false,
-      analogStick: Directions.NEUTRAL
+      analogStick: Directions.NEUTRAL,
     };
   }
 
@@ -52,7 +52,7 @@ class JoyConRight extends JoyCon {
       zr: Boolean(bytes[2] & 0x80),
 
       analogStickPress: Boolean(bytes[2] & 0x08),
-      analogStick: bytes[3]
+      analogStick: bytes[3],
     };
   }
 }

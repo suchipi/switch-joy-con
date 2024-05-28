@@ -87,13 +87,13 @@ left.on("up:minus", () => {
 });
 
 // a `change:${buttonName}` event is also emitted:
-left.on("change:minus", pressed => {
+left.on("change:minus", (pressed) => {
   console.log(`minus is now: ${pressed ? "pressed" : "unpressed"}`);
 });
 
 // The `analogStick` "button" is a number. Use the `Directions` property on the
 // instance to understand its value:
-left.on("change:analogStick", value => {
+left.on("change:analogStick", (value) => {
   switch (value) {
     case left.Directions.UP: {
       console.log("up");
@@ -198,6 +198,7 @@ You can obtain a `JoyCon` instance by calling `open` on a `JoyConDescription`, a
 
 Each `JoyCon` adheres to the following interface:
 
+<!-- prettier-ignore -->
 ```ts
 interface JoyCon extends EventEmitter {
   // Whether the Joy-Con attaches to the left or right side of a Switch.

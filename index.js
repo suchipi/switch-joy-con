@@ -5,8 +5,8 @@ const JoyConRight = require("./joy-con-right");
 function listConnectedJoyCons() {
   const devices = HID.devices();
   return devices
-    .filter(device => device.vendorId === 1406)
-    .map(device => {
+    .filter((device) => device.vendorId === 1406)
+    .map((device) => {
       return Object.assign({}, device, {
         open(optionalSideOverride) {
           if (device.productId === 8198 || optionalSideOverride === "left") {
@@ -22,14 +22,14 @@ function listConnectedJoyCons() {
                 device.vendorId +
                 ":" +
                 device.productId +
-                "'; cannot auto-detect whether it's a left-side or right-side Joy-Con. Pass either 'left' or 'right' as an argument to the open() method."
+                "'; cannot auto-detect whether it's a left-side or right-side Joy-Con. Pass either 'left' or 'right' as an argument to the open() method.",
             );
           }
-        }
+        },
       });
     });
 }
 
 module.exports = {
-  listConnectedJoyCons
+  listConnectedJoyCons,
 };
