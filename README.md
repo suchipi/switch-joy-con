@@ -2,6 +2,8 @@
 
 Use Nintendo Switch Joy-Cons as input devices (Bluetooth).
 
+> Note: This doesn't support Switch 2 Joy-Cons, only Switch 1 Joy-Cons.
+
 ## Features
 
 - Run callback(s) when buttons are pressed/released/changed
